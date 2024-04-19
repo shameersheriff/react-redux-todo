@@ -1,4 +1,5 @@
 import { createStore } from 'redux';
+import { loadState, saveState } from './service/LocalStorageService';
 
 const initialState = {
   todos: []
@@ -15,5 +16,14 @@ function todoReducer(state = initialState, action) {
   }
 }
 
-const store = createStore(todoReducer);
+const persistedState = loadState();
+
+const store = createStore(todoReducer, persistedState);
+
+store.subscribe(() => {
+  saveState({
+    todos: store.getState().todos
+  });
+});
+
 export default store;
